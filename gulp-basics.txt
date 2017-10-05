@@ -1,0 +1,99 @@
+
+1. Sass
+
+$ npm install gulp-sass --save-dev
+
+gulp.task('sass', function(){
+  return gulp.src('source-files')
+    .pipe(sass()) // Using gulp-sass
+    .pipe(gulp.dest('destination'))
+});
+
+2. Globing nodes
+
+*.scss
+**/*.scss
+!not-me.scss
+*.+(scss|sass)
+
+2. BrowserSync
+
+npm install browser-sync --save-dev
+
+var browserSync = require('browser-sync').create();
+
+gulp.task('browserSync', function() {
+  browserSync.init({
+    server: {
+      baseDir: 'app'
+    },
+  })
+});
+
+gulp.task('sass', function() {
+  return gulp.src('app/scss/**/*.scss') // Gets all files ending with .scss in app/scss
+    .pipe(sass())
+    .pipe(gulp.dest('app/css'))
+    .pipe(browserSync.reload({
+      stream: true
+    }))
+});
+
+gulp.task('watch', ['browserSync', 'sass'], function (){
+  gulp.watch('app/scss/**/*.scss', ['sass']); 
+  // Other watchers
+});
+
+3. Useref
+
+$ npm install gulp-useref --save-dev
+
+4. uglify
+
+npm install gulp-uglify --save-dev 
+
+gulpIf
+
+5. cssnano
+
+npm install gulp-cssnano
+
+6. imagemin
+
+npm install gulp-imagemin --save-dev
+
+7. gulp-cache
+
+npm install gulp-cache --save-dev
+
+8.deleting files
+
+npm install del --save-dev
+
+gulp.task('clean:dist', function() {
+  return del.sync('dist');
+})
+
+9. run-sequence
+
+$ npm install run-sequence --save-dev
+
+var runSequence = require('run-sequence');
+
+gulp.task('task-name', function(callback) {
+  runSequence('task-one', 'task-two', 'task-three', callback);
+});
+
+gulp.task('build', function (callback) {
+  runSequence('clean:dist', 
+    ['sass', 'useref', 'images', 'fonts'],
+    callback
+  )
+})
+
+gulp.task('default', function (callback) {
+  runSequence(['sass','browserSync', 'watch'],
+    callback
+  )
+})
+
